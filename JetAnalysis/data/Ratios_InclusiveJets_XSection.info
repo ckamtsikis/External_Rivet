@@ -1,0 +1,24 @@
+Name: Ratios_InclusiveJets_XSection
+Year: 2020
+Summary: 
+Experiment: CMS
+Collider: LHC
+InspireID: 
+Status: UNVALIDATED
+Authors:
+ - christos.kamtsikis@cern.ch
+#References:
+#- '<Example: Eur.Phys.J. C76 (2016) no.7, 392>'
+#- '<Example: DOI:10.1140/epjc/s10052-016-4184-8>'
+#- '<Example: arXiv:1605.03814>'
+RunInfo: QCD at $\sqrt{s} = 13\;\TeV$
+#Beams: [p+, p+]
+#Energies: [13000]
+#Luminosity_fb: 30000
+Description:
+  '<A fairly long description, including what is measured
+  and if possible what it is useful for in terms of MC validation
+  and tuning. Use LaTeX for maths like $\pT > 50\;\GeV$.>'
+Keywords: []
+BibKey: 
+BibTeX: ''
