@@ -14,7 +14,9 @@ git-cms-addpkg GeneratorInterface/RivetInterface
 git-cms-addpkg Configuration/Generator
 git clone ssh://git@gitlab.cern.ch:7999/cms-gen/Rivet.git
 git remote add cms-gen ssh://git@gitlab.cern.ch:7999/cms-gen/Rivet.git
-source $CMSSW_BASE/src/GeneratorInterface/RivetInterface/test/rivetSetup.sh
-source Rivet/rivetSetup.sh
-scram b
+git clone https://github.com/ckamtsikis/External_Rivet3.git
+cp /path/to/personal/analysis.cc $CMSSW_BASE/src/External_Rivet3/JetAnalysis/src
+cp /path/to/personal/data.yoda $CMSSW_BASE/src/External_Rivet3/JetAnalysis/data
+source $CMSSW_BASE/src/External_Rivet3/JetAnalysis/test/source_rivetSetup.sh
+scram b -j4
 ```   
