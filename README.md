@@ -1,6 +1,6 @@
-# External Package for Rivet 3 analysis
+# External Package for Rivet 3 analysis in CMS experiment at CERN
 
-This package is a software that provide you the opportunity to add your personal rivet analysis and make a MC event generation
+This package is a software that provides you the opportunity to make MC event generation using your personal rivet analysis
 
 # Installation
 
