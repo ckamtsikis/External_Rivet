@@ -26,7 +26,7 @@ process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(10),
 )
 
-process.RandomNumberGeneratorService.generator.initialSeed = int(os.getenv('seed'))
+#process.RandomNumberGeneratorService.generator.initialSeed = int(os.getenv('seed'))
 
 # Input source
 process.source = cms.Source("EmptySource")
@@ -84,9 +84,12 @@ process.generator = cms.EDFilter("Pythia8GeneratorFilter",
         pythia8CUEP8M1Settings = cms.vstring(
             'Tune:pp 14', 
             'Tune:ee 7', 
-            'MultipartonInteractions:pT0Ref=2.4024', 
+            'MultipartonInteractions:pT0Ref=2.20e+00', 
             'MultipartonInteractions:ecmPow=0.25208', 
-            'MultipartonInteractions:expPow=1.6'
+            'MultipartonInteractions:expPow=1.6',
+            'SpaceShower:alphaSvalue=0.1108',
+            'PDF:pSet=LHAPDF6:NNPDF30_lo_as_0130',
+            'ColourReconnection:range=6.59e+00'
         ),
         pythia8CommonSettings = cms.vstring(
             'Tune:preferLHAPDF = 2', 
@@ -129,7 +132,8 @@ from External_Rivet3.JetAnalysis.Pythia8_tuneCUETP8M1_customize import customise
 
 #call to customisation function customise imported from External_Rivet3.JetAnalysis.Pythia8_tuneCUETP8M1_customize
 process = customise(process)
-process.rivetAnalyzer.OutputFile = cms.string(os.getenv('yodafile'))
+#process.rivetAnalyzer.OutputFile = cms.string(os.getenv('yodafile'))
+process.rivetAnalyzer.CrossSection = cms.double(2.011e+09)
 
 # End of customisation functions
 

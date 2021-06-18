@@ -79,7 +79,9 @@ process.generator = cms.EDFilter("Pythia8GeneratorFilter",
             'PhaseSpace:pTHatMax = 6500', 
             'PhaseSpace:bias2Selection = on', 
             'PhaseSpace:bias2SelectionPow = 4.5', 
-            'PhaseSpace:bias2SelectionRef = 15.'
+            'PhaseSpace:bias2SelectionRef = 15.',
+            'PartonLevel:MPI=off',
+	    'HadronLevel:all=off'
         ),
         pythia8CUEP8M1Settings = cms.vstring(
             'Tune:pp 14', 
