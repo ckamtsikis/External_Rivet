@@ -35,23 +35,23 @@ namespace Rivet {
       book(_h_Ratio53,9,1,1);
       book(_h_Ratio52,10,1,1);
       
-
     }
 
     //-------- Per-event Analysis -----------
     void analyze(const Event& event) {
-
-      const Jets& jets = apply<JetAlg>(event, "antikT").jetsByPt( Cuts::absrap < 2.5 && Cuts::pT > 150.*GeV );
+      const Jets& jets = apply<JetAlg>(event, "antikT").jetsByPt( Cuts::absrap < 2.5 && Cuts::pT >= 100.*GeV );
 
       //-------------- At least 2 jets --------------------
       if(jets.size() >= 2) {
-        double ht2 = 0.5*(jets[0].pT()+jets[1].pT());
-        _h_Inclusive2jets->fill(ht2/GeV);
+        if(jets[0].pT() >= 150.*GeV){
+          double ht2 = 0.5*(jets[0].pT()+jets[1].pT());
+          _h_Inclusive2jets->fill(ht2/GeV);
 
-        //------------------ Extra Jets ---------------------
-        if(jets.size() >= 3) _h_Inclusive3jets->fill(ht2/GeV);
-        if(jets.size() >= 4) _h_Inclusive4jets->fill(ht2/GeV);
-        if(jets.size() >= 5) _h_Inclusive5jets->fill(ht2/GeV);
+          //------------------ Extra Jets ---------------------
+          if(jets.size() >= 3) _h_Inclusive3jets->fill(ht2/GeV);
+          if(jets.size() >= 4) _h_Inclusive4jets->fill(ht2/GeV);
+          if(jets.size() >= 5) _h_Inclusive5jets->fill(ht2/GeV);
+        }
       }
 
     }
@@ -80,9 +80,6 @@ namespace Rivet {
 
   };
 
-
   // The hook for the plugin system
   DECLARE_RIVET_PLUGIN(Ratios_InclusiveJets_XSection);
-
-
 }
