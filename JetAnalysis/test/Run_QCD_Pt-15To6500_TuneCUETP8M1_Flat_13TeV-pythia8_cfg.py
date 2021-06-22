@@ -5,38 +5,8 @@
 # with command line options: External_Rivet3/JetAnalysis/python/QCD_Pt-15To7000_TuneCUETP8M1_Flat_14TeV-pythia8_cff.py -s GEN --datatier=GEN-SIM-RAW --conditions auto:mc --eventcontent RAWSIM --no_exec -n 10 --python_filename=QCD_Pt-15To6500_TuneCUETP8M1_Flat_13TeV-pythia8_cfg.py --customise=External_Rivet3/JetAnalysis/Pythia8_tuneCUETP8M1_customize.py
 import FWCore.ParameterSet.Config as cms
 import os
-import random
-import time
 
 process = cms.Process('GEN')
-
-random.seed(time.time())
-rnd1 = random.randint(0, 100000000)
-#rnd2 = random.randint(0, 100000000)
-
-job_index = int(os.getenv("JOBINDEX"))
-#seed_gen = 100*job_index+rnd1
-#seed_vertex = 100*job_index+rnd2
-
-dataset = os.getenv("LHESET")
-files = file(dataset).read().split("\n")
-#files = filter(lambda s: s!="", files)
-#files = [ os.path.join("rfio:"+files[0], f) for f in files[1:] ]
-
-files_per_job = int(os.getenv("FILESPERJOB"))
-file_start = files_per_job*(job_index)
-file_end = files_per_job*(job_index+1)
-if file_end > len(files):
-    file_end = len(files)
-
-files_scoped = files[file_start:file_end]
-#files_scoped = files[1:2]
-print "Files to read in: ", files_scoped
-
-process.source = cms.Source("LHESource",
-                    fileNames = cms.untracked.vstring(*files_scoped),
-                    )
-
 
 # import of standard configurations
 process.load('Configuration.StandardSequences.Services_cff')
@@ -44,8 +14,8 @@ process.load('SimGeneral.HepPDTESSource.pythiapdt_cfi')
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.load('Configuration.EventContent.EventContent_cff')
 process.load('SimGeneral.MixingModule.mixNoPU_cfi')
-process.load('Configuration.StandardSequences.GeometryDB_cff')
-process.load('Configuration.StandardSequences.MagneticField_38T_cff')
+process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
+process.load('Configuration.StandardSequences.MagneticField_cff')
 process.load('Configuration.StandardSequences.Generator_cff')
 process.load('IOMC.EventVertexGenerators.VtxSmearedRealistic50ns13TeVCollision_cfi')
 process.load('GeneratorInterface.Core.genFilterSummary_cff')
@@ -53,10 +23,10 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(10),
+    input = cms.untracked.int32(1000),
 )
 
-#process.RandomNumberGeneratorService.generator.initialSeed = int(os.getenv('seed'))
+#process.RandomNumberGeneratorService.generator.initialSeed = int(os.getenv('SEED'))
 
 # Input source
 process.source = cms.Source("EmptySource")
@@ -96,39 +66,48 @@ process.genstepfilter.triggerConditions=cms.vstring("generation_step")
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:mc', '')
 
-process.generator = cms.EDFilter("Pythia8HadronizerFilter",
-    pythiaPylistVerbosity = cms.untracked.int32(1),
-    filterEfficiency = cms.untracked.double(1.0),
-    pythiaHepMCVerbosity = cms.untracked.bool(False),
-    comEnergy = cms.double(13000.0),
-    maxEventsToPrint = cms.untracked.int32(0),
-    PythiaParameters = cms.PSet(				 
-        pythia8PowhegEmissionVetoSettings = cms.vstring(
-            'POWHEG:veto=1',
-            'POWHEG:pTdef=1',
-            'POWHEG:emitted=0',
-            'POWHEG:pTemt=0',
-            'POWHEG:pThard=2', #userhook = 2
-            'POWHEG:vetoCount=100',
-            'SpaceShower:pTmaxMatch=2',
-            'TimeShower:pTmaxMatch=2',
+process.generator = cms.EDFilter("Pythia8GeneratorFilter",
+    PythiaParameters = cms.PSet(
+        parameterSets = cms.vstring(
+            'pythia8CommonSettings', 
+            'pythia8CUEP8M1Settings', 
+            'processParameters'
         ),
         processParameters = cms.vstring(
-            'Main:timesAllowErrors    = 10000',
-            'ParticleDecays:limitTau0 = on',
-            'ParticleDecays:tauMax = 10',
-            'Tune:pp=14',
-            'Tune:ee=7',
-            'MultipartonInteractions:pT0Ref=2.4024',
-            'MultipartonInteractions:ecmPow=0.25208',
-            'MultipartonInteractions:expPow=1.6',
+            'HardQCD:all = on', 
+            'PhaseSpace:pTHatMin = 15', 
+            'PhaseSpace:pTHatMax = 7000', 
+            'PhaseSpace:bias2Selection = on', 
+            'PhaseSpace:bias2SelectionPow = 4.5', 
+            'PhaseSpace:bias2SelectionRef = 15.',
         ),
-        parameterSets = cms.vstring('pythia8PowhegEmissionVetoSettings','processParameters')
-        )        
+        pythia8CUEP8M1Settings = cms.vstring(
+            'Tune:pp 14', 
+            'Tune:ee 7', 
+            'MultipartonInteractions:pT0Ref=2.4024', 
+            'MultipartonInteractions:ecmPow=0.25208', 
+            'MultipartonInteractions:expPow=1.6'
+        ),
+        pythia8CommonSettings = cms.vstring(
+            'Tune:preferLHAPDF = 2', 
+            'Main:timesAllowErrors = 10000', 
+            'Check:epTolErr = 0.01', 
+            'Beams:setProductionScalesFromLHEF = off', 
+            'SLHA:minMassSM = 1000.', 
+            'ParticleDecays:limitTau0 = on', 
+            'ParticleDecays:tau0Max = 10', 
+            'ParticleDecays:allowPhotonRadiation = on'
+        )
+    ),
+    comEnergy = cms.double(13000.0),
+    crossSection = cms.untracked.double(2022100000.0),
+    filterEfficiency = cms.untracked.double(1.0),
+    maxEventsToPrint = cms.untracked.int32(1),
+    pythiaHepMCVerbosity = cms.untracked.bool(False),
+    pythiaPylistVerbosity = cms.untracked.int32(1)
 )
-	
 
-process.ProductionFilterSequence = cms.Sequence(process.generator)
+
 # Path and EndPath definitions
 process.generation_step = cms.Path(process.pgen)
 process.genfiltersummary_step = cms.EndPath(process.genFilterSummary)
@@ -150,8 +129,8 @@ from External_Rivet3.JetAnalysis.Pythia8_tuneCUETP8M1_customize import customise
 
 #call to customisation function customise imported from External_Rivet3.JetAnalysis.Pythia8_tuneCUETP8M1_customize
 process = customise(process)
-#process.rivetAnalyzer.OutputFile = cms.string(os.getenv('yodafile'))
-process.rivetAnalyzer.CrossSection = cms.double(1.000e-09)
+#process.rivetAnalyzer.OutputFile = cms.string(os.getenv('OUTPUT'))
+#process.rivetAnalyzer.CrossSection = cms.double(2.250e+07)
 
 # End of customisation functions
 

@@ -42,18 +42,17 @@ namespace Rivet {
       const Jets& jets = apply<JetAlg>(event, "antikT").jetsByPt( Cuts::absrap < 2.5 && Cuts::pT >= 100.*GeV );
 
       //-------------- At least 2 jets --------------------
-      if(jets.size() >= 2) {
-        if(jets[0].pT() >= 150.*GeV){
-          double ht2 = 0.5*(jets[0].pT()+jets[1].pT());
-          _h_Inclusive2jets->fill(ht2/GeV);
+      if(jets.size() < 2) vetoEvent;
+      if(jets[0].pT() < 150.*GeV) vetoEvent;
+      
+      double ht2 = 0.5*(jets[0].pT()+jets[1].pT());
+      _h_Inclusive2jets->fill(ht2/GeV);
 
-          //------------------ Extra Jets ---------------------
-          if(jets.size() >= 3) _h_Inclusive3jets->fill(ht2/GeV);
-          if(jets.size() >= 4) _h_Inclusive4jets->fill(ht2/GeV);
-          if(jets.size() >= 5) _h_Inclusive5jets->fill(ht2/GeV);
-        }
-      }
-
+      //------------------ Extra Jets ---------------------
+      if(jets.size() >= 3) _h_Inclusive3jets->fill(ht2/GeV);
+      if(jets.size() >= 4) _h_Inclusive4jets->fill(ht2/GeV);
+      if(jets.size() >= 5) _h_Inclusive5jets->fill(ht2/GeV); 
+      
     }
 
     //--------- Normalize histograms -----------
