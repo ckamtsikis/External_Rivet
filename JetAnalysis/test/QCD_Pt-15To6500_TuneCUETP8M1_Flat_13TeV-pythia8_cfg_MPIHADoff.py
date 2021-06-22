@@ -23,10 +23,10 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(10),
+    input = cms.untracked.int32(1000),
 )
 
-process.RandomNumberGeneratorService.generator.initialSeed = int(os.getenv('seed'))
+process.RandomNumberGeneratorService.generator.initialSeed = int(os.getenv('SEED'))
 
 # Input source
 process.source = cms.Source("EmptySource")
@@ -75,7 +75,7 @@ process.generator = cms.EDFilter("Pythia8GeneratorFilter",
         ),
         processParameters = cms.vstring(
             'HardQCD:all = on', 
-            'PhaseSpace:pTHatMin = 15', 
+            'PhaseSpace:pTHatMin = 50', 
             'PhaseSpace:pTHatMax = 6500', 
             'PhaseSpace:bias2Selection = on', 
             'PhaseSpace:bias2SelectionPow = 4.5', 
@@ -131,7 +131,8 @@ from External_Rivet3.JetAnalysis.Pythia8_tuneCUETP8M1_customize import customise
 
 #call to customisation function customise imported from External_Rivet3.JetAnalysis.Pythia8_tuneCUETP8M1_customize
 process = customise(process)
-process.rivetAnalyzer.OutputFile = cms.string(os.getenv('yodafile'))
+process.rivetAnalyzer.OutputFile = cms.string(os.getenv('OUTPUT'))
+process.rivetAnalyzer.CrossSection = cms.double(2.268e+07)
 
 # End of customisation functions
 
