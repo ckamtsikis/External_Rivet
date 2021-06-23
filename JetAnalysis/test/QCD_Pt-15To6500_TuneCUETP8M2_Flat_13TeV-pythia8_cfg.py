@@ -133,7 +133,7 @@ from External_Rivet3.JetAnalysis.Pythia8_tuneCUETP8M1_customize import customise
 #call to customisation function customise imported from External_Rivet3.JetAnalysis.Pythia8_tuneCUETP8M1_customize
 process = customise(process)
 process.rivetAnalyzer.OutputFile = cms.string(os.getenv('OUTPUT'))
-process.rivetAnalyzer.CrossSection = cms.double(2.011e+09)
+process.rivetAnalyzer.CrossSection = cms.double(2.342e+07)
 
 # End of customisation functions
 
