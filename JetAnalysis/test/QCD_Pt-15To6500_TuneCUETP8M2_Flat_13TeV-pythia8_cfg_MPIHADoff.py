@@ -26,7 +26,7 @@ process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(10),
 )
 
-process.RandomNumberGeneratorService.generator.initialSeed = int(os.getenv('seed'))
+process.RandomNumberGeneratorService.generator.initialSeed = int(os.getenv('SEED'))
 
 # Input source
 process.source = cms.Source("EmptySource")
@@ -134,8 +134,8 @@ from External_Rivet3.JetAnalysis.Pythia8_tuneCUETP8M1_customize import customise
 
 #call to customisation function customise imported from External_Rivet3.JetAnalysis.Pythia8_tuneCUETP8M1_customize
 process = customise(process)
-process.rivetAnalyzer.OutputFile = cms.string(os.getenv('yodafile'))
-process.rivetAnalyzer.CrossSection = cms.double(2.011e+09)
+process.rivetAnalyzer.OutputFile = cms.string(os.getenv('OUTPUT'))
+process.rivetAnalyzer.CrossSection = cms.double(2.368e+07)
 
 # End of customisation functions
 
