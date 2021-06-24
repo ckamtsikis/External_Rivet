@@ -5,18 +5,17 @@ This package provides you the opportunity to make MC event generation using your
 # Installation Rivet2
 
 ```
-export SCRAM_ARCH=slc7_amd64_gcc700
-cmsrel CMSSW_10_6_0
-cd CMSSW_10_6_0/src
+export SCRAM_ARCH=slc7_amd64_gcc630
+cmsrel CMSSW_9_2_13
+cd CMSSW_9_2_13/src
 cmsenv
 git cms-init -q
 git-cms-addpkg GeneratorInterface/RivetInterface
 git-cms-addpkg Configuration/Generator
 git clone ssh://git@gitlab.cern.ch:7999/cms-gen/Rivet.git
-git remote add cms-gen ssh://git@gitlab.cern.ch:7999/cms-gen/Rivet.git
-git clone --branch CMSSW_10_6_0 https://github.com/ckamtsikis/External_Rivet3.git
+git clone --branch CMSSW_9_2_13 https://github.com/ckamtsikis/External_Rivet3.git
 cp /path/to/personal/analysis.cc $CMSSW_BASE/src/External_Rivet3/JetAnalysis/src  // Optional
 cp /path/to/personal/data.yoda $CMSSW_BASE/src/External_Rivet3/JetAnalysis/data   // Optional
 source $CMSSW_BASE/src/External_Rivet3/JetAnalysis/test/source_rivetSetup.sh
-scram b -j4
+scram b -j8
 ```   
